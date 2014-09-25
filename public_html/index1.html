@@ -1,0 +1,113 @@
+<!DOCTYPE html>
+<html>
+<head>
+    <meta charset=utf-8 />
+    <title>External map layers</title>
+    <meta name='viewport' content='initial-scale=1,maximum-scale=1,user-scalable=no' />
+    <script src='https://api.tiles.mapbox.com/mapbox.js/v2.0.1/mapbox.js'></script>
+    <link href='https://api.tiles.mapbox.com/mapbox.js/v2.0.1/mapbox.css' rel='stylesheet' />
+    <style>
+        body { margin:0; padding:0; }
+        #map { position:absolute; top:0; bottom:0; width:100%; }
+    </style>
+</head>
+<body>
+
+
+<div id='map'></div>
+
+<script>
+    L.mapbox.accessToken = 'pk.eyJ1Ijoia2VyYiIsImEiOiJpdXNnU0V3In0.EzvrG2coRiHt9Up-TpeRuw#18/45.67922/-111.03717';
+    var map = L.mapbox.map('map','kerb.h5cpkg76');
+
+    var markers = [];
+
+    markers.push(L.mapbox.featureLayer({
+        type : 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: [-111.039019, 45.679582]
+        },
+        properties: {
+            title: 'The Baxter Hotel',
+            description: 'Baxter Hotel in Bozeman',
+            'marker-size': 'large',
+            'marker-color': '#fff'
+
+        }
+    }).addTo(map));
+
+    markers.push(L.mapbox.featureLayer({
+        type : 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: [-111.034462, 45.679578]
+        },
+        properties: {
+            title: 'Bangtail Bike and Ski',
+            description: 'Bike Repair in Bozeman',
+            'marker-size': 'large',
+            'marker-color': '#fff'
+
+        }
+    }).addTo(map));
+
+    markers.push(L.mapbox.featureLayer({
+        type : 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: [-111.037820, 45.679166]
+        },
+        properties: {
+            title: 'Wild Joe\'s Coffee Shop',
+            description: 'Best Coffee in Bozeman!',
+            'marker-size': 'large',
+            'marker-color': '#fff'
+
+        }
+    }).addTo(map));
+
+    markers.push(L.mapbox.featureLayer({
+        type : 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: [-111.039001, 45.678603]
+        },
+        properties: {
+            title: 'Naked Noodle',
+            description: 'Thai Food',
+            'marker-size': 'large',
+            'marker-color': '#fff'
+
+        }
+    }).addTo(map));
+
+    markers.push(L.mapbox.featureLayer({
+        type : 'Feature',
+        geometry: {
+            type: 'Point',
+            coordinates: [-111.03717, 45.67922]
+        },
+        properties: {
+            title: 'You',
+            description: 'You Are Here!',
+            'marker-size': 'small',
+            'marker-color': '#aef',
+            'marker-symbol': 'circle'
+
+        }
+    }).addTo(map));
+
+    L.circle([45.67922, -111.03717], 10).addTo(map);
+
+    markers.forEach(function(marker){
+        marker.eachLayer(function(m){
+            m.openPopup();
+        })
+    });
+
+</script>
+
+
+</body>
+</html>
