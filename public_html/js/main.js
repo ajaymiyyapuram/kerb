@@ -36,8 +36,6 @@ function showPosition(position) {
     plotLocations(notificationsLayer, map);
     animate(notificationsLayer, map);
 
-
-    // plotPositions(position.coords.latitude, position.coords.longitude, nearByNotifications);
 }
 
 function createLayerData(data) {
