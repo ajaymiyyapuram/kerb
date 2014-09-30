@@ -11,34 +11,29 @@ $(document).ready(function () {
 
 // callback for getcurrentposition
 function showPosition(position) {
+    
     var map = L.mapbox.map('map', 'examples.map-20v6611k');
+    
     var latitude = position.coords.latitude;
     var longitude = position.coords.longitude;
-    map.setView([latitude, longitude], 15);
+    map.setView([latitude, longitude], 12);
 
     var usersLayer = createLayerData(JSON.parse(
             '{ "notifications" : [' +
             '{ "latitude":"' + latitude + '", "longitude":"' + longitude + '", "name":"User" } ]}'
-            ));
-
+            ), '#000', 'circle', 20);
     plotLocations(usersLayer, map);
-    animate(usersLayer, map);
-
-    // plotLocation(user);
-    // animate(radius, updateinterval, layer, map);
+    animate(usersLayer, map, 6, 10, 40, 10, "black"); 
+    // animate(usersLayer, map);
 
     var nearByNotifications = getNearByNotifications(latitude, longitude);
-    var notificationsLayer = createLayerData(nearByNotifications);
-
-    // plotLocation(notifications)
-    // animate(radius, updateinterval, layer, map);
-
+    var notificationsLayer = createLayerData(nearByNotifications, '#000', 'circle', 20);
     plotLocations(notificationsLayer, map);
-    animate(notificationsLayer, map);
+    animate(notificationsLayer, map, 6, 10, 60, 10, "red"); 
+    // cycleThroughNotifications(notificationMarkers);
+}   
 
-}
-
-function createLayerData(data) {
+function createLayerData(data, markercolor, markersymbol, markersize) {
     var features = [];
 
     // Add all nearby notifications to feature list.
@@ -50,10 +45,10 @@ function createLayerData(data) {
                 coordinates: [data.notifications[i].longitude, data.notifications[i].latitude]
             },
             properties: {
-                'marker-color': '#000',
-                'marker-symbol': 'circle',
+                'marker-color': markercolor,
+                'marker-symbol': markersymbol,
                 title: data.notifications[i].name,
-                count: 20
+                count: markersize
             }
         });
     }
@@ -119,11 +114,11 @@ function plotLocations(layer, map) {
     }).addTo(map);
 }
 
-function animate(layer, map) {
-    var circleRadius = 6;
+function animate(layer, map, circleinitrad, circleminrad, circlemaxrad, updateInterval, color) {
+    var circleRadius = circleinitrad;
     var reachedMaxRadius = false;
     var geoJson;
-    var circleSizeUpdateInterval = 10; //milliseconds
+    var circleSizeUpdateInterval = updateInterval; //milliseconds
 
     function run() {
 
@@ -132,7 +127,7 @@ function animate(layer, map) {
             pointToLayer: function (feature, latlng) {
                 return L.circleMarker(latlng, {
                     radius: circleRadius,
-                    color: "red"
+                    color: color
                 })
             }
         });
@@ -143,15 +138,15 @@ function animate(layer, map) {
         window.setTimeout(function () {
             map.removeLayer(geoJson);
             if (reachedMaxRadius === false)
-                circleRadius = circleRadius + 1;
+                circleRadius = circleRadius + 4;
             else
                 circleRadius = circleRadius - 1;
 
-            if (circleRadius > 50) {
+            if (circleRadius > circlemaxrad) {
                 circleSizeUpdateInterval = 120;
                 reachedMaxRadius = true;
             }
-            if (circleRadius < 10) {
+            if (circleRadius < circleminrad) {
                 circleSizeUpdateInterval = 10;
                 reachedMaxRadius = false;
             }
