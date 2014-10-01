@@ -23,13 +23,13 @@ function showPosition(position) {
             '{ "latitude":"' + latitude + '", "longitude":"' + longitude + '", "name":"User" } ]}'
             ), '#000', 'circle', 20);
     plotLocations(usersLayer, map);
-    animate(usersLayer, map, 6, 10, 40, 10, "black"); 
+    animate(usersLayer, map, 6, 10, 30, 10, false, "black"); 
     // animate(usersLayer, map);
 
     var nearByNotifications = getNearByNotifications(latitude, longitude);
     var notificationsLayer = createLayerData(nearByNotifications, '#000', 'circle', 20);
     plotLocations(notificationsLayer, map);
-    animate(notificationsLayer, map, 6, 10, 60, 10, "red"); 
+    animate(notificationsLayer, map, 6, 10, 60, 10, true, "red"); 
     // cycleThroughNotifications(notificationMarkers);
 }   
 
@@ -114,7 +114,7 @@ function plotLocations(layer, map) {
     }).addTo(map);
 }
 
-function animate(layer, map, circleinitrad, circleminrad, circlemaxrad, updateInterval, color) {
+function animate(layer, map, circleinitrad, circleminrad, circlemaxrad, updateInterval, circleinout, color) {
     var circleRadius = circleinitrad;
     var reachedMaxRadius = false;
     var geoJson;
@@ -143,8 +143,14 @@ function animate(layer, map, circleinitrad, circleminrad, circlemaxrad, updateIn
                 circleRadius = circleRadius - 1;
 
             if (circleRadius > circlemaxrad) {
-                circleSizeUpdateInterval = 120;
-                reachedMaxRadius = true;
+                
+                if(circleinout === true) {
+                    circleSizeUpdateInterval = 120;
+                    reachedMaxRadius = true;
+                } else {
+                    circleSizeUpdateInterval = 120;
+                    circleRadius = circleminrad + 1;
+                }
             }
             if (circleRadius < circleminrad) {
                 circleSizeUpdateInterval = 10;
